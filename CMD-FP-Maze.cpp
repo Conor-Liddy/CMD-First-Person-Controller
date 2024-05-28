@@ -1,4 +1,4 @@
-﻿/*
+/*
    * @Author: Conor Liddy
    * 
    * First person game that runs in CMD
@@ -20,15 +20,18 @@ int nScreenHeight = 40;
 
 
 // Map constants
-int nMapHeight = 16;
-int nMapWidth = 16;
+int nMapHeight = 18;
+int nMapWidth = 18;
 
 // Player variables
 float fPlayerX = nMapWidth / 2.0f;
 float fPlayerY = nMapHeight / 2.0f;
-float fPlayerA = 0.0f;      // Angle
+float fPlayerA = 3.3f;      // Angle
 float fFOV = 3.14159 / 4.0;   // Field of view
 float fDepth = 16.0f;   // Field of view
+
+float fTurnSpeed = 1.5f;
+float fMoveSpeed = 5.0f;
 
 
 int main()
@@ -42,22 +45,24 @@ int main()
     // Map setup
     wstring map;
 
-    map += L"################"; // 1
-    map += L"#.......#......#"; // 2
-    map += L"#.......#......#"; // 3
-    map += L"#.......#...####"; // 4
-    map += L"#.......#...#..#"; // 5
-    map += L"#...#.......#..#"; // 6
-    map += L"#...#.......#..#"; // 7
-    map += L"#...#.......#..#"; // 8
-    map += L"#...#.......#..#"; // 9
-    map += L"#...#########..#"; // 10
-    map += L"#.......#......#"; // 11
-    map += L"#.......#......#"; // 12
-    map += L"#..#....#...####"; // 13
-    map += L"#..#...........#"; // 14
-    map += L"#..#...........#"; // 15
-    map += L"################"; // 16
+    map += L"##################"; // 1
+    map += L"#.......#........#"; // 2
+    map += L"#...#...#........#"; // 3
+    map += L"#.......#...######"; // 4
+    map += L"#.......#...#....#"; // 5
+    map += L"#...#.......#....#"; // 6
+    map += L"#...#...#...#....#"; // 7
+    map += L"#...#.......#....#"; // 8
+    map += L"#...#.......#....#"; // 9
+    map += L"#...#########....#"; // 10
+    map += L"#.......#........#"; // 11
+    map += L"#.......#........#"; // 12
+    map += L"#..#....#...######"; // 13
+    map += L"#..#.............#"; // 14
+    map += L"#..#.............#"; // 15
+    map += L"#..#.............#"; // 16
+    map += L"#..#.............#"; // 17
+    map += L"##################"; // 18
 
     auto tp1 = chrono::system_clock::now();
     auto tp2 = chrono::system_clock::now();
@@ -73,30 +78,31 @@ int main()
 
         // Player Controls
         if (GetAsyncKeyState((unsigned short)'A') & 0x8000)     // Turn left
-            fPlayerA -= (1.0f) * fElapsedTime;
+            fPlayerA -= (fTurnSpeed) * fElapsedTime;
 
         if (GetAsyncKeyState((unsigned short)'D') & 0x8000)     // Turn right
-            fPlayerA += (1.0f) * fElapsedTime;
+            fPlayerA += (fTurnSpeed) * fElapsedTime;
 
         if (GetAsyncKeyState((unsigned short)'W') & 0x8000) {   // Move forward
-            fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
-            fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerX += sinf(fPlayerA) * fMoveSpeed * fElapsedTime;
+            fPlayerY += cosf(fPlayerA) * fMoveSpeed * fElapsedTime;
 
             // Colission detection
             if (map[(int)fPlayerY * nMapWidth + (int)fPlayerX] == '#') {
-                fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
-                fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
+                fPlayerX -= sinf(fPlayerA) * fMoveSpeed * fElapsedTime;
+                fPlayerY -= cosf(fPlayerA) * fMoveSpeed * fElapsedTime;
             }
         }
 
+
         if (GetAsyncKeyState((unsigned short)'S') & 0x8000) {   // Move backward
-            fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
-            fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerX -= sinf(fPlayerA) * fMoveSpeed * fElapsedTime;
+            fPlayerY -= cosf(fPlayerA) * fMoveSpeed * fElapsedTime;
 
             // Colission detection
             if (map[(int)fPlayerY * nMapWidth + (int)fPlayerX] == '#') {
-                fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
-                fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+                fPlayerX += sinf(fPlayerA) * fMoveSpeed * fElapsedTime;
+                fPlayerY += cosf(fPlayerA) * fMoveSpeed * fElapsedTime;
             }
         }
 
@@ -146,6 +152,7 @@ int main()
                         float fBound = 0.005;
                         if (acos(p.at(0).second) < fBound) bBoundry = true;
                         if (acos(p.at(1).second) < fBound) bBoundry = true;
+                        //if (acos(p.at(2).second) < fBound) bBoundry = true;
                     }
                 }
 
