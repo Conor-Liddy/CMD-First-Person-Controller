@@ -294,10 +294,10 @@ int main()
         // Display Map
         for (int nx = 0; nx < nMapWidth; nx++)
             for (int ny = 0; ny < nMapHeight; ny++) {
-                screen[(ny + 1) * nScreenWidth + nx] = map[ny * nMapWidth + nx];
+                screen[(ny + 1) * nScreenWidth - (nx + 1)] = map[ny * nMapWidth + nx];
             }
 
-        screen[((int)fPlayerY + 1) * nScreenWidth + (int)fPlayerX] = 'P';
+        screen[((int)fPlayerY + 1) * nScreenWidth - (int)fPlayerX] = 'P';
 
         // Write to screen
         screen[nScreenWidth * nScreenHeight - 1] = '\0';
